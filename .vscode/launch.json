@@ -1,0 +1,10 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Board",
+            "request": "launch",
+            "mainClass": "Board"
+        }
+    ]
+}

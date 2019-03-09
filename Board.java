@@ -1,38 +1,34 @@
 import javax.swing.*;
 import java.awt.*;
 
-//make some nice comments
-
 public class Board {
 
-    public int rows = 8;
-    public int columns = 8;
-    
+    public int size;
     public static void main(String[] arg) { 
-        Board board = new Board(8, 8);
-        JFrame frame = new JFrame();
-        frame.setVisible(true);
-        frame.setTitle("Hello world!"); 
-        frame.setSize(900,900);
+
+        Board board = new Board(8); 
+        JFrame frame = new JFrame(); //frame setup
+        frame.setTitle("Draughts"); 
+        frame.setSize(870,900);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        JPanel panel = new JPanel(new GridBagLayout()); 
+        JPanel panel = new JPanel(new GridBagLayout()); //uses gridbaglayout
         GridBagConstraints gbc = new GridBagConstraints();
-
         frame.setContentPane(panel);
 
-        Square[] spaces = new Square[64];
-        gbc.ipadx = -32;
+        Square[] spaces = new Square[(int)Math.pow(board.size, 2)]; //creates array of squares
+        gbc.ipadx = -32; //remove button padding
         gbc.ipady = -8;
-        for(int i = 0; i < 64; i++) {  
-                gbc.gridy = (i / 8);
-                gbc.gridx = (i % 8);
-                spaces[i] = new Square(board, panel, gbc);
+
+        for(int i = 0; i < (int)Math.pow(board.size, 2); i++) {  
+                gbc.gridy = (i / board.size); //calcs square y coordinate
+                gbc.gridx = (i % board.size); //calcs square x coordinate
+                spaces[i] = new Square(board, panel, gbc, board.size/2);
         }
+
+        frame.setVisible(true);
     }
 
-    Board(int rows, int columns) {
-        this.rows = rows;
-        this.columns = columns;
+    Board(int size) {
+        this.size = size;
     }
 }

@@ -18,7 +18,7 @@ public class Board {
         Square[] spaces = new Square[(int)Math.pow(board.size, 2)]; //creates array of squares
         gbc.ipadx = -32; //remove button padding
         gbc.ipady = -8;
-
+        
         for(int i = 0; i < (int)Math.pow(board.size, 2); i++) {  
                 gbc.gridy = (i / board.size); //calcs square y coordinate
                 gbc.gridx = (i % board.size); //calcs square x coordinate

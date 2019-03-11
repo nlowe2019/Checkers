@@ -4,15 +4,11 @@ import java.awt.event.*;
 
 public class Square implements ActionListener{
 
-    int xPos;
-    int yPos;
-    String contents = "NONE";
-
-    static boolean selected = false;
-    static Square sourceSquare;
-    static int source;
-    static int dest;
-    static JButton[] btn = new JButton[64];
+    private int xPos;
+    private int yPos;
+    private String contents = "NONE";
+    private Board b;
+    //private static JButton[] btn = new JButton[64];
 
     //relevant images
     ImageIcon emptyw = new ImageIcon("empty.png");
@@ -22,54 +18,82 @@ public class Square implements ActionListener{
 
     Square(Board board, JPanel p, GridBagConstraints gbc, int mid) {
 
+        b = board;
         xPos = gbc.gridx; //stores squares position on grid
         yPos = gbc.gridy;
-        int i = ((yPos * 8) + xPos);
-        btn[i] = new JButton();
+        int i = ((yPos * b.getSize()) + xPos);
+        b.btn[i] = new JButton();
 
         if(gbc.gridx % 2 == gbc.gridy % 2)
-            btn[i].setIcon(emptyb);
+            b.btn[i].setIcon(emptyb);
         else
-            if(gbc.gridy < mid-1) {
-                btn[i].setIcon(RED);
+            if(gbc.gridy < (b.getSize()/2)-1) {
+                b.btn[i].setIcon(RED);
                 contents = "RED";
             }
-            else if(gbc.gridy > mid) {
-                btn[i].setIcon(WHITE);
+            else if((b.getSize() % 2 == 0 && gbc.gridy > b.getSize()/2) || (b.getSize() % 2 == 1 && gbc.gridy > b.getSize()/2+1)) {
+                b.btn[i].setIcon(WHITE);
                 contents = "WHITE";
             }
             else
-                btn[i].setIcon(emptyw); 
+                b.btn[i].setIcon(emptyw); 
 
-        btn[i].addActionListener(this);
-        p.add(btn[i], gbc);
+        b.btn[i].addActionListener(this);
+        p.add(b.btn[i], gbc);
     }
 
     public void actionPerformed(ActionEvent e) {
-        if (selected == false) {
-            if(this.contents != "NONE") {
-                source = (this.yPos * 8) + this.xPos;
-                sourceSquare = this;
-                selected = true;
+        if (b.getSelected() == false) {
+            Select(this);
+        }
+        else {
+            moveTo(this);
+        }
+    }
+
+    public void Select(Square s) {
+        if(s.contents == "RED" && b.getTurn() == false || s.contents == "WHITE" && b.getTurn() == true) {
+            b.setSource((s.yPos * b.getSize()) + s.xPos);
+            b.setSourceSquare(s);
+            b.setSelected(true);
+        }
+        else {
+            System.out.println("Invalid Selection");
+        }
+    }
+
+    public void moveTo(Square s) {
+        if((b.getSourceSquare().contents == "WHITE" && s.yPos == b.getSourceSquare().yPos - 1)||(b.getSourceSquare().contents == "RED" && s.yPos == b.getSourceSquare().yPos + 1)) {
+            if(s.xPos == b.getSourceSquare().xPos + 1 || s.xPos == b.getSourceSquare().xPos - 1) {
+                b.setDest((s.yPos * b.getSize()) + s.xPos);
+                s.contents = b.getSourceSquare().contents; 
+                if(s.contents == "RED")
+                    b.btn[b.getDest()].setIcon(RED);
+                else
+                    b.btn[b.getDest()].setIcon(WHITE);
+                b.btn[b.getSource()].setIcon(emptyw);
+                printMove(b.getSource(), b.getDest());
+                b.getSourceSquare().contents = "NONE";
+                if(b.getTurn() == true) {
+                    b.setTurn(false);
+                }
+                else {
+                    b.setTurn(true);
+                }
+                b.setSelected(false);
             }
         }
         else {
-            if (this.xPos % 2 == this.yPos % 2) {
-                ;
-            }
-            else {
-            dest = (this.yPos * 8) + this.xPos;
-            String i = this.contents;
-            System.out.print(i);
-            this.contents = sourceSquare.contents; 
-            if(this.contents == "RED")
-                btn[dest].setIcon(RED);
-            else
-                btn[dest].setIcon(WHITE);
-            btn[source].setIcon(emptyw);
-            sourceSquare.contents = "NONE";
-            selected = false;
-            }
+            b.setSelected(false);
+            System.out.println("Invalid Move");
         }
+    }
+
+    public void printMove(int s, int d) {
+        int sn = 8 - s/b.getSize();
+        int dn = 8 - d/b.getSize();
+        char sl = (char)(s % b.getSize() + 65);
+        char dl = (char)(d % b.getSize() + 65);
+        System.out.println(b.getSourceSquare().contents + ": " + sl + sn + " to " + dl + dn);
     }
 }

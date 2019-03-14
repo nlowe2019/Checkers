@@ -1,6 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
 
+//TAKE PIECE FUNCTION - ADD TO RED/WHITE COUNTER AND EVERY TIME PIECE IS TAKEN CHECK FOR WIN
+/*VALID MOVES - DIAGONAL EMPTY (XPOS +- 1 AND Y +/- 1) - OR IF TAKEN BY OPPOSITE COLOUR, 
+THEN IS (XPOS +- 2 AND Y +/- 2) EMPTY? REPLACE ICON WITH SELECTED ICON */
+
 public class Board {
 
     private int size;
@@ -8,23 +12,24 @@ public class Board {
     private int source;
     private int dest;
     private boolean selected;
-    private Square sourceSquare;
+    public JFrame frame;
     JButton[] btn;
     Square[] spaces;
-    public static void main(String[] arg) { 
-
+    
+    public static void main(String[] arg) {
         Board board = new Board(8);
     }
 
     Board(int size) {
         this.size = size; //sets board size
-        JFrame frame = new JFrame(); //frame setup
-        frame.setTitle("Draughts"); 
+        frame = new JFrame(); //frame setup
+        frame.setTitle("Draughts - White's Turn"); 
         frame.setSize(870,900);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JPanel panel = new JPanel(new GridBagLayout()); //uses gridbaglayout
+        JScrollPane scroll = new JScrollPane(panel);
         GridBagConstraints gbc = new GridBagConstraints();
-        frame.setContentPane(panel);
+        frame.setContentPane(scroll);
 
         spaces = new Square[(int)Math.pow(this.size, 2)]; //creates array of squares
         btn = new JButton[(int)Math.pow(this.size, 2)];
@@ -35,14 +40,12 @@ public class Board {
         for(int i = 0; i < (int)Math.pow(this.size, 2); i++) {  
                 gbc.gridy = (i / this.size); //calcs square y coordinate
                 gbc.gridx = (i % this.size); //calcs square x coordinate
-                Square s = new Square(this, panel, gbc, this.size/2);
+                Square s = new Square(this, panel, gbc);
                 spaces[i] = s;
         }
-
         frame.setVisible(true);
     }
-
-
+    
     //accessors and mutators...
     public boolean getTurn() {
         return whiteTurn;
@@ -78,13 +81,5 @@ public class Board {
 
     public void setDest(int d) {
         dest = d;
-    }
-
-    public Square getSourceSquare() {
-        return sourceSquare;
-    }
-
-    public void setSourceSquare(Square s) {
-        sourceSquare = s;
     }
 }

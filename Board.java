@@ -1,10 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
 
-//TAKE PIECE FUNCTION - ADD TO RED/WHITE COUNTER AND EVERY TIME PIECE IS TAKEN CHECK FOR WIN
-/*VALID MOVES - DIAGONAL EMPTY (XPOS +- 1 AND Y +/- 1) - OR IF TAKEN BY OPPOSITE COLOUR, 
-THEN IS (XPOS +- 2 AND Y +/- 2) EMPTY? REPLACE ICON WITH SELECTED ICON */
-
 public class Board {
 
     private int size;
@@ -15,7 +11,6 @@ public class Board {
     public JFrame frame;
     JButton[] btn;
     Square[] spaces;
-    
     public static void main(String[] arg) {
         Board board = new Board(8);
     }
@@ -33,7 +28,6 @@ public class Board {
 
         spaces = new Square[(int)Math.pow(this.size, 2)]; //creates array of squares
         btn = new JButton[(int)Math.pow(this.size, 2)];
-
         gbc.ipadx = -32; //remove button padding
         gbc.ipady = -8;
         
@@ -46,7 +40,8 @@ public class Board {
         frame.setVisible(true);
     }
     
-    //accessors and mutators...
+    //accessors and mutators
+
     public boolean getTurn() {
         return whiteTurn;
     }
